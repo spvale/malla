@@ -1,150 +1,540 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Malla Curricular Diseño Gráfico</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #fff0f5;
-      color: #4b2e2e;
-      padding: 30px;
-      line-height: 1.6;
-    }
-    h1 {
-      text-align: center;
-      color: #d14e94;
-      font-size: 3em;
-      margin-bottom: 10px;
-    }
-    .semestre {
-      background: #ffe6f0;
-      border-left: 5px solid #d14e94;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 800px;
-      box-shadow: 0 5px 15px rgba(209, 78, 148, 0.2);
-    }
-    .semestre h2 {
-      color: #b03574;
-      margin-bottom: 10px;
-    }
-    ul {
-      padding-left: 20px;
-    }
-    li {
-      margin-bottom: 6px;
-    }
-    .creditos {
-      font-weight: bold;
-      color: #994a74;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Académica - Diseño Gráfico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .semester-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .semester {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #ff6b9d;
+        }
+
+        .semester h2 {
+            color: #764ba2;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .semester h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #ff6b9d;
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .subject-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9ff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b9d, #c44569);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 107, 157, 0.2);
+            border-color: #ff6b9d;
+        }
+
+        .subject-card.completed {
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc8 100%);
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+
+        .subject-card.completed::before {
+            background: linear-gradient(90deg, #4caf50, #81c784);
+        }
+
+        .subject-card.disabled {
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .subject-card.disabled::before {
+            background: #bdbdbd;
+        }
+
+        .subject-card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        .subject-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .subject-area {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .subject-credits {
+            font-size: 0.95rem;
+            color: #ff6b9d;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subject-prereqs {
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #4caf50;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .subject-card.completed .checkmark {
+            opacity: 1;
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #764ba2;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .reset-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>Malla Académica Diseño Gráfico</h1>
+            <p>Profesional en Diseño Gráfico • Código SNIES 53670</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
 
-  <h1>🎨 Malla Curricular Diseño Gráfico</h1>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="completedSubjects">0</span>
+                <span class="stat-label">Materias Completadas</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="completedCredits">0</span>
+                <span class="stat-label">Créditos Obtenidos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="currentSemester">1</span>
+                <span class="stat-label">Semestre Actual</span>
+            </div>
+        </div>
 
-  <div class="semestre">
-    <h2>🌟 Primer Semestre (18 créditos)</h2>
-    <ul>
-      <li>Constitución y Ciudadanía - <span class="creditos">2</span></li>
-      <li>Diseño Básico - <span class="creditos">6</span></li>
-      <li>Expresión Gráfica - <span class="creditos">2</span></li>
-      <li>Herramientas Digitales I - <span class="creditos">3</span></li>
-      <li>Ser Caribe - <span class="creditos">2</span></li>
-      <li>Taller de Ciudad y Contexto - <span class="creditos">1</span></li>
-      <li>Teoría del Diseño - <span class="creditos">2</span></li>
-    </ul>
-  </div>
+        <div class="semester-container" id="semesterContainer"></div>
+    </div>
 
-  <div class="semestre">
-    <h2>🌸 Segundo Semestre (18 créditos)</h2>
-    <ul>
-      <li>Comunicación Visual - <span class="creditos">2</span></li>
-      <li>Diseño Tipográfico - <span class="creditos">3</span></li>
-      <li>Electiva Desarrollo Humano - <span class="creditos">2</span></li>
-      <li>Fotografía - <span class="creditos">2</span></li>
-      <li>Herramientas Digitales II - <span class="creditos">2</span></li>
-      <li>Investigación de Contextos y Usuarios - <span class="creditos">2</span></li>
-      <li>Pensamiento de Diseño - <span class="creditos">2</span></li>
-      <li>Taller LEA - <span class="creditos">3</span></li>
-    </ul>
-  </div>
+    <button class="reset-button" onclick="resetProgress()">🔄 Reiniciar</button>
 
-  <div class="semestre">
-    <h2>🌼 Tercer Semestre (18 créditos)</h2>
-    <ul>
-      <li>Analítica de Datos - <span class="creditos">2</span></li>
-      <li>Diseño Editorial - <span class="creditos">3</span></li>
-      <li>Diseño Sostenible - <span class="creditos">2</span></li>
-      <li>Electiva Visión Global - <span class="creditos">2</span></li>
-      <li>Experiencia de Usuario - <span class="creditos">3</span></li>
-      <li>Herramientas Digitales III - <span class="creditos">2</span></li>
-      <li>Ilustración - <span class="creditos">2</span></li>
-      <li>Semiótica - <span class="creditos">2</span></li>
-    </ul>
-  </div>
+    <script>
+        const subjects = {
+            1: [
+                {name: "Constitución y Ciudadanía", area: "Institucional", credits: 2, prereqs: []},
+                {name: "Ser Caribe", area: "Profesional", credits: 2, prereqs: []},
+                {name: "Taller de Ciudad y Contexto", area: "Profesional", credits: 1, prereqs: []},
+                {name: "Teoría del Diseño", area: "Básica Profesional", credits: 2, prereqs: []},
+                {name: "Herramientas Digitales I", area: "Profesional", credits: 3, prereqs: []},
+                {name: "Diseño Básico", area: "Profesional", credits: 6, prereqs: []},
+                {name: "Expresión Gráfica", area: "Básica Profesional", credits: 2, prereqs: []}
+            ],
+            2: [
+                {name: "Electiva Desarrollo Humano", area: "Institucional", credits: 2, prereqs: []},
+                {name: "Comunicación Visual", area: "Básica Profesional", credits: 2, prereqs: ["Taller de Ciudad y Contexto"]},
+                {name: "Diseño Tipográfico", area: "Profesional", credits: 3, prereqs: ["Teoría del Diseño"]},
+                {name: "Taller LEA", area: "Profesional", credits: 3, prereqs: ["Diseño Básico"]},
+                {name: "Fotografía", area: "Profesional", credits: 2, prereqs: ["Herramientas Digitales I"]},
+                {name: "Herramientas Digitales II", area: "Profesional", credits: 2, prereqs: ["Herramientas Digitales I"]},
+                {name: "Pensamiento de Diseño", area: "Básica Profesional", credits: 2, prereqs: ["Expresión Gráfica"]},
+                {name: "Investigación de Contextos y Usuarios", area: "Profesional", credits: 2, prereqs: ["Taller de Ciudad y Contexto"]}
+            ],
+            3: [
+                {name: "Electiva Visión Global", area: "Institucional", credits: 2, prereqs: []},
+                {name: "Analítica de Datos", area: "Profesional", credits: 2, prereqs: ["Taller LEA"]},
+                {name: "Semiótica", area: "Básica Profesional", credits: 2, prereqs: ["Comunicación Visual"]},
+                {name: "Diseño Sostenible", area: "Profesional", credits: 2, prereqs: ["Pensamiento de Diseño"]},
+                {name: "Diseño Editorial", area: "Profesional", credits: 3, prereqs: ["Diseño Tipográfico"]},
+                {name: "Herramientas Digitales III", area: "Profesional", credits: 2, prereqs: ["Herramientas Digitales II"]},
+                {name: "Ilustración", area: "Profesional", credits: 2, prereqs: ["Fotografía"]},
+                {name: "Experiencia de Usuario", area: "Profesional", credits: 3, prereqs: ["Investigación de Contextos y Usuarios"]}
+            ],
+            4: [
+                {name: "Curso Libre Formación Integral", area: "Institucional", credits: 2, prereqs: []},
+                {name: "Electiva Emprendimiento e Innovación", area: "Institucional", credits: 2, prereqs: []},
+                {name: "Teoría de la Imagen", area: "Básica Profesional", credits: 3, prereqs: ["Semiótica"]},
+                {name: "Propiedad Intelectual", area: "Profesional", credits: 2, prereqs: ["Diseño Sostenible"]},
+                {name: "Animación", area: "Profesional", credits: 2, prereqs: ["Ilustración"]},
+                {name: "Diseño de Productos Digitales", area: "Profesional", credits: 2, prereqs: ["Experiencia de Usuario"]},
+                {name: "Diseño Web", area: "Profesional", credits: 2, prereqs: ["Herramientas Digitales III"]},
+                {name: "Antropología Cultural", area: "Profesional", credits: 3, prereqs: ["Investigación de Contextos y Usuarios"]}
+            ],
+            5: [
+                {name: "Gestión del Diseño", area: "Profesional", credits: 2, prereqs: ["Propiedad Intelectual"]},
+                {name: "Deontología del Diseño", area: "Básica Profesional", credits: 2, prereqs: ["Teoría de la Imagen"]},
+                {name: "Infografía", area: "Profesional", credits: 2, prereqs: ["Diseño Editorial"]},
+                {name: "Fundamentos de la Investigación", area: "Básica Profesional", credits: 2, prereqs: ["Antropología Cultural"]},
+                {name: "Diseño Audiovisual", area: "Profesional", credits: 3, prereqs: ["Animación"]},
+                {name: "Taller Audiovisual", area: "Profesional", credits: 2, prereqs: ["Diseño Audiovisual"]},
+                {name: "Electiva I", area: "Profesional", credits: 3, prereqs: []},
+                {name: "Herramientas Digitales IV", area: "Profesional", credits: 2, prereqs: ["Diseño Web"]}
+            ],
+            6: [
+                {name: "Diseño Estratégico", area: "Profesional", credits: 3, prereqs: ["Gestión del Diseño"]},
+                {name: "Branding", area: "Profesional", credits: 3, prereqs: ["Infografía"]},
+                {name: "Metodología de la Investigación", area: "Básica Profesional", credits: 2, prereqs: ["Fundamentos de la Investigación"]},
+                {name: "Diseño y Gestión Cultural", area: "Profesional", credits: 4, prereqs: ["Taller Audiovisual"]},
+                {name: "Electiva II", area: "Profesional", credits: 3, prereqs: []},
+                {name: "Electiva III", area: "Profesional", credits: 3, prereqs: []}
+            ],
+            7: [
+                {name: "Marketing Digital", area: "Profesional", credits: 2, prereqs: ["Diseño Estratégico"]},
+                {name: "Electiva de Profundización I", area: "Profesional", credits: 3, prereqs: ["Branding"]},
+                {name: "Electiva de Profundización II", area: "Profesional", credits: 3, prereqs: ["Metodología de la Investigación"]},
+                {name: "Electiva de Profundización III", area: "Profesional", credits: 2, prereqs: ["Diseño y Gestión Cultural"]},
+                {name: "Opción de Grado", area: "Profesional", credits: 8, prereqs: ["Todas las anteriores"]}
+            ],
+            8: [
+                {name: "Práctica Profesional", area: "Profesional", credits: 16, prereqs: ["Opción de Grado"]},
+                {name: "Seminario de Profundización", area: "Básica Profesional", credits: 2, prereqs: ["Electivas Profundización"]}
+            ]
+        };
 
-  <div class="semestre">
-    <h2>🍒 Cuarto Semestre (18 créditos)</h2>
-    <ul>
-      <li>Animación - <span class="creditos">2</span></li>
-      <li>Antropología Cultural - <span class="creditos">3</span></li>
-      <li>Curso Libre Formación Integral - <span class="creditos">2</span></li>
-      <li>Diseño de Productos Digitales - <span class="creditos">2</span></li>
-      <li>Diseño Web - <span class="creditos">2</span></li>
-      <li>Electiva Emprendimiento e Innovación - <span class="creditos">2</span></li>
-      <li>Propiedad Intelectual - <span class="creditos">2</span></li>
-      <li>Teoría de la Imagen - <span class="creditos">3</span></li>
-    </ul>
-  </div>
+        let completedSubjects = new Set();
+        let totalSubjects = 0;
+        let totalCredits = 0;
 
-  <div class="semestre">
-    <h2>🌷 Quinto Semestre (18 créditos)</h2>
-    <ul>
-      <li>Deontología del Diseño - <span class="creditos">2</span></li>
-      <li>Diseño Audiovisual - <span class="creditos">3</span></li>
-      <li>Electiva I - <span class="creditos">3</span></li>
-      <li>Fundamentos de la Investigación - <span class="creditos">2</span></li>
-      <li>Gestión del Diseño - <span class="creditos">2</span></li>
-      <li>Herramientas Digitales IV - <span class="creditos">2</span></li>
-      <li>Infografía - <span class="creditos">2</span></li>
-      <li>Taller Audiovisual - <span class="creditos">2</span></li>
-    </ul>
-  </div>
+        // Calcular totales
+        Object.values(subjects).forEach(semester => {
+            semester.forEach(subject => {
+                totalSubjects++;
+                totalCredits += subject.credits;
+            });
+        });
 
-  <div class="semestre">
-    <h2>💐 Sexto Semestre (18 créditos)</h2>
-    <ul>
-      <li>Branding - <span class="creditos">3</span></li>
-      <li>Diseño Estratégico - <span class="creditos">3</span></li>
-      <li>Diseño y Gestión Cultural - <span class="creditos">4</span></li>
-      <li>Electiva II - <span class="creditos">3</span></li>
-      <li>Electiva III - <span class="creditos">3</span></li>
-      <li>Metodología de la Investigación - <span class="creditos">2</span></li>
-    </ul>
-  </div>
+        function initializeMalla() {
+            const container = document.getElementById('semesterContainer');
+            
+            for (let semester = 1; semester <= 8; semester++) {
+                const semesterDiv = document.createElement('div');
+                semesterDiv.className = 'semester';
+                semesterDiv.innerHTML = `
+                    <h2>Semestre ${semester}</h2>
+                    <div class="subjects-grid" id="semester${semester}"></div>
+                `;
+                container.appendChild(semesterDiv);
+                
+                const gridContainer = document.getElementById(`semester${semester}`);
+                subjects[semester].forEach((subject, index) => {
+                    const subjectCard = createSubjectCard(subject, semester, index);
+                    gridContainer.appendChild(subjectCard);
+                });
+            }
+            
+            updateSubjectStates();
+        }
 
-  <div class="semestre">
-    <h2>💖 Séptimo Semestre (18 créditos)</h2>
-    <ul>
-      <li>Electiva de Profundización I - <span class="creditos">3</span></li>
-      <li>Electiva de Profundización II - <span class="creditos">3</span></li>
-      <li>Electiva de Profundización III - <span class="creditos">2</span></li>
-      <li>Marketing Digital - <span class="creditos">2</span></li>
-      <li>Opción de Grado - <span class="creditos">8</span></li>
-    </ul>
-  </div>
+        function createSubjectCard(subject, semester, index) {
+            const card = document.createElement('div');
+            card.className = 'subject-card';
+            card.id = `subject-${semester}-${index}`;
+            
+            const prereqsText = subject.prereqs.length > 0 ? 
+                `Prerrequisitos: ${subject.prereqs.join(', ')}` : 
+                'Sin prerrequisitos';
+            
+            card.innerHTML = `
+                <div class="checkmark">✓</div>
+                <div class="subject-name">${subject.name}</div>
+                <div class="subject-area">${subject.area}</div>
+                <div class="subject-credits">${subject.credits} créditos</div>
+                <div class="subject-prereqs">${prereqsText}</div>
+            `;
+            
+            card.addEventListener('click', () => toggleSubject(subject.name, semester, index));
+            return card;
+        }
 
-  <div class="semestre">
-    <h2>🌺 Octavo Semestre (18 créditos)</h2>
-    <ul>
-      <li>Práctica Profesional - <span class="creditos">16</span></li>
-      <li>Seminario de Profundización - <span class="creditos">2</span></li>
-    </ul>
-  </div>
+        function toggleSubject(subjectName, semester, index) {
+            const card = document.getElementById(`subject-${semester}-${index}`);
+            
+            if (card.classList.contains('disabled')) return;
+            
+            if (completedSubjects.has(subjectName)) {
+                completedSubjects.delete(subjectName);
+            } else {
+                completedSubjects.add(subjectName);
+            }
+            
+            updateSubjectStates();
+            updateStats();
+        }
 
+        function updateSubjectStates() {
+            for (let semester = 1; semester <= 8; semester++) {
+                subjects[semester].forEach((subject, index) => {
+                    const card = document.getElementById(`subject-${semester}-${index}`);
+                    const isCompleted = completedSubjects.has(subject.name);
+                    const canTake = canTakeSubject(subject);
+                    
+                    card.classList.remove('completed', 'disabled');
+                    
+                    if (isCompleted) {
+                        card.classList.add('completed');
+                    } else if (!canTake) {
+                        card.classList.add('disabled');
+                    }
+                });
+            }
+        }
+
+        function canTakeSubject(subject) {
+            if (subject.prereqs.length === 0) return true;
+            if (subject.prereqs.includes("Todas las anteriores")) {
+                // Verificar que todas las materias de semestres anteriores estén completadas
+                for (let sem = 1; sem <= 6; sem++) {
+                    for (let subj of subjects[sem]) {
+                        if (!completedSubjects.has(subj.name)) return false;
+                    }
+                }
+                return true;
+            }
+            if (subject.prereqs.includes("Electivas Profundización")) {
+                const profElectives = ["Electiva de Profundización I", "Electiva de Profundización II", "Electiva de Profundización III"];
+                return profElectives.every(elective => completedSubjects.has(elective));
+            }
+            
+            return subject.prereqs.every(prereq => completedSubjects.has(prereq));
+        }
+
+        function updateStats() {
+            const completedCount = completedSubjects.size;
+            const completedCreditsCount = Array.from(completedSubjects).reduce((total, subjectName) => {
+                for (let semester = 1; semester <= 8; semester++) {
+                    const subject = subjects[semester].find(s => s.name === subjectName);
+                    if (subject) return total + subject.credits;
+                }
+                return total;
+            }, 0);
+            
+            const currentSem = getCurrentSemester();
+            const progressPercentage = (completedCount / totalSubjects) * 100;
+            
+            document.getElementById('completedSubjects').textContent = completedCount;
+            document.getElementById('completedCredits').textContent = completedCreditsCount;
+            document.getElementById('currentSemester').textContent = currentSem;
+            document.getElementById('progressFill').style.width = progressPercentage + '%';
+        }
+
+        function getCurrentSemester() {
+            for (let semester = 1; semester <= 8; semester++) {
+                const hasIncompleteSubject = subjects[semester].some(subject => 
+                    !completedSubjects.has(subject.name) && canTakeSubject(subject)
+                );
+                if (hasIncompleteSubject) return semester;
+            }
+            return 8;
+        }
+
+        function resetProgress() {
+            if (confirm('¿Estás segura de que quieres reiniciar todo el progreso?')) {
+                completedSubjects.clear();
+                updateSubjectStates();
+                updateStats();
+            }
+        }
+
+        // Cargar progreso guardado
+        function loadProgress() {
+            const saved = localStorage.getItem('mallaProgress');
+            if (saved) {
+                completedSubjects = new Set(JSON.parse(saved));
+            }
+        }
+
+        // Guardar progreso
+        function saveProgress() {
+            localStorage.setItem('mallaProgress', JSON.stringify(Array.from(completedSubjects)));
+        }
+
+        // Guardar automáticamente cada vez que cambie el estado
+        const originalToggle = toggleSubject;
+        toggleSubject = function(...args) {
+            originalToggle.apply(this, args);
+            saveProgress();
+        };
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            initializeMalla();
+            updateStats();
+        });
+    </script>
 </body>
 </html>
